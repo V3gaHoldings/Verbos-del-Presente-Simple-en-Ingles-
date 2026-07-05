@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="English Adventure - Domina el Presente Simple en inglés de forma divertida">
+<title>Present Simple Master 🎯 | English Adventure</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: { extend: {
+    animation: {
+      'bounce-slow':'bounce 2s infinite','wiggle':'wiggle 0.5s ease-in-out',
+      'pop':'pop 0.3s ease-out','slide-up':'slideUp 0.4s ease-out','float':'float 3s ease-in-out infinite'
+    },
+    keyframes: {
+      wiggle:{'0%,100%':{transform:'rotate(-3deg)'},'50%':{transform:'rotate(3deg)'}},
+      pop:{'0%':{transform:'scale(0.8)',opacity:0},'100%':{transform:'scale(1)',opacity:1}},
+      slideUp:{'0%':{transform:'translateY(20px)',opacity:0},'100%':{transform:'translateY(0)',opacity:1}},
+      float:{'0%,100%':{transform:'translateY(0)'},'50%':{transform:'translateY(-10px)'}},
+    }
+  }}
+}
+</script>
+<style>
+  body{font-family:'Segoe UI',system-ui,sans-serif;}
+  .card-hover{transition:all .3s cubic-bezier(.4,0,.2,1);}
+  .card-hover:hover{transform:translateY(-6px);box-shadow:0 20px 40px rgba(0,0,0,.15);}
+  ::-webkit-scrollbar{width:10px;}::-webkit-scrollbar-thumb{background:#34d399;border-radius:10px;}
+  .flip-card{perspective:1000px;}.flip-inner{transition:transform .6s;transform-style:preserve-3d;position:relative;}
+  .flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+  .flip-front,.flip-back{backface-visibility:hidden;position:absolute;inset:0;}
+  .flip-back{transform:rotateY(180deg);}
+  .progress-ring circle{transition:stroke-dashoffset .6s;}
+  .shake{animation:wiggle .4s;}
+</style>
+</head>
+<body class="bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-100 min-h-screen transition-colors">
+
+<!-- ============ TOP BAR ============ -->
+<header class="sticky top-0 z-50 backdrop-blur-lg bg-white/80 dark:bg-gray-900/80 border-b border-emerald-100 dark:border-gray-700 shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+    <div class="flex items-center gap-2 cursor-pointer" onclick="showView('dashboard')">
+      <span class="text-3xl animate-bounce-slow">🎯</span>
+      <h1 class="text-lg md:text-xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">Present Simple Master</h1>
+    </div>
+    <div class="flex items-center gap-2 md:gap-3 text-sm font-semibold">
+      <div class="flex items-center gap-1 bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-300 px-3 py-1.5 rounded-full">🔥 <span id="stat-streak">0</span></div>
+      <div class="flex items-center gap-1 bg-yellow-100 dark:bg-yellow-900/40 text-yellow-600 dark:text-yellow-300 px-3 py-1.5 rounded-full">⭐ <span id="stat-xp">0</span></div>
+      <div class="hidden sm:flex items-center gap-1 bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-300 px-3 py-1.5 rounded-full">💎 <span id="stat-gems">0</span></div>
+      <button onclick="toggleSound()" id="soundBtn" class="w-9 h-9 rounded-full bg-emerald-100 dark:bg-gray-700 flex items-center justify-center hover:scale-110 transition">🔊</button>
+      <button onclick="toggleDark()" class="w-9 h-9 rounded-full bg-emerald-100 dark:bg-gray-700 flex items-center justify-center hover:scale-110 transition">🌙</button>
+    </div>
+  </div>
+  <div class="h-1.5 bg-emerald-100 dark:bg-gray-700"><div id="levelBar" class="h-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-500" style="width:0%"></div></div>
+</header>
+
+<!-- ============ MOBILE NAV ============ -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-t border-emerald-100 dark:border-gray-700 flex justify-around py-2">
+  <button onclick="showView('dashboard')" class="flex flex-col items-center text-xs gap-0.5 text-emerald-600"><span class="text-xl">🏠</span>Inicio</button>
+  <button onclick="showView('lessons')" class="flex flex-col items-center text-xs gap-0.5"><span class="text-xl">📚</span>Clases</button>
+  <button onclick="showView('verbs')" class="flex flex-col items-center text-xs gap-0.5"><span class="text-xl">🔤</span>Verbos</button>
+  <button onclick="showView('games')" class="flex flex-col items-center text-xs gap-0.5"><span class="text-xl">🎮</span>Juegos</button>
+  <button onclick="showView('profile')" class="flex flex-col items-center text-xs gap-0.5"><span class="text-xl">👤</span>Perfil</button>
+</nav>
+
+<div class="max-w-7xl mx-auto flex gap-6 px-4 py-6 pb-24 md:pb-6">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="hidden md:flex flex-col gap-1 w-56 sticky top-24 self-start bg-white dark:bg-gray-800 rounded-2xl p-3 shadow-lg h-fit">
+    <button onclick="showView('dashboard')" class="sidebtn active">🏠 Dashboard</button>
+    <button onclick="showView('lessons')" class="sidebtn">📚 Lecciones</button>
+    <button onclick="showView('verbs')" class="sidebtn">🔤 Verbos (100+)</button>
+    <button onclick="showView('conjugator')" class="sidebtn">⚙️ Conjugador</button>
+    <button onclick="showView('games')" class="sidebtn">🎮 Mini Juegos</button>
+    <button onclick="showView('quiz')" class="sidebtn">✅ Evaluaciones</button>
+    <button onclick="showView('achievements')" class="sidebtn">🏆 Logros</button>
+    <button onclick="showView('profile')" class="sidebtn">👤 Mi Perfil</button>
+    <div class="mt-4 p-3 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white text-center">
+      <div class="text-xs opacity-90">Nivel actual</div>
+      <div id="sideLevel" class="text-2xl font-extrabold">1</div>
+      <div id="sideLevelName" class="text-xs">Principiante</div>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="flex-1 min-w-0">
+
+    <!-- ===== DASHBOARD ===== -->
+    <section id="view-dashboard" class="view space-y-6 animate-slide-up">
+      <div class="bg-gradient-to-r from-emerald-600 to-teal-500 rounded-3xl p-6 md:p-8 text-white relative overflow-hidden">
+        <div class="absolute right-4 bottom-0 text-8xl opacity-20 animate-float">🎯</div>
+        <h2 class="text-2xl md:text-3xl font-extrabold mb-1">¡Domina el Presente Simple, <span id="welcomeName">Explorador</span>! 👋</h2>
+        <p class="opacity-90 mb-4">El tiempo verbal más usado en inglés te espera</p>
+        <div class="flex flex-wrap gap-3">
+          <button onclick="showView('lessons')" class="bg-white text-emerald-600 font-bold px-5 py-2.5 rounded-xl hover:scale-105 transition shadow-lg">▶️ Empezar a aprender</button>
+          <button onclick="startDailyChallenge()" class="bg-emerald-800/40 backdrop-blur border border-white/30 font-bold px-5 py-2.5 rounded-xl hover:scale-105 transition">⚡ Reto Diario</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 card-hover shadow"><div class="text-3xl mb-1">🔥</div><div id="dashStreak" class="text-2xl font-extrabold text-orange-500">0</div><div class="text-xs text-gray-500">Días de racha</div></div>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 card-hover shadow"><div class="text-3xl mb-1">🔤</div><div id="dashVerbs" class="text-2xl font-extrabold text-green-500">0</div><div class="text-xs text-gray-500">Verbos dominados</div></div>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 card-hover shadow"><div class="text-3xl mb-1">✅</div><div id="dashLessons" class="text-2xl font-extrabold text-blue-500">0</div><div class="text-xs text-gray-500">Lecciones</div></div>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 card-hover shadow"><div class="text-3xl mb-1">⏱️</div><div id="dashTime" class="text-2xl font-extrabold text-teal-500">0m</div><div class="text-xs text-gray-500">Tiempo estudiado</div></div>
+      </div>
+
+      <div>
+        <h3 class="text-xl font-bold mb-3 flex items-center gap-2">🗺️ Tu ruta del Presente Simple</h3>
+        <div id="pathContainer" class="grid md:grid-cols-2 gap-4"></div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow">
+          <h4 class="font-bold mb-3">📊 Progreso general</h4>
+          <div class="flex items-center gap-4">
+            <svg class="progress-ring" width="90" height="90"><circle cx="45" cy="45" r="38" stroke="#a7f3d0" stroke-width="9" fill="none"/><circle id="progRing" cx="45" cy="45" r="38" stroke="#10b981" stroke-width="9" fill="none" stroke-dasharray="238" stroke-dashoffset="238" stroke-linecap="round" transform="rotate(-90 45 45)"/></svg>
+            <div><div id="progPercent" class="text-3xl font-extrabold text-emerald-600">0%</div><div class="text-sm text-gray-500">Módulo completado</div></div>
+          </div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow">
+          <h4 class="font-bold mb-3">🎯 Meta diaria</h4>
+          <div class="mb-2 flex justify-between text-sm"><span>XP de hoy</span><span id="dailyGoalText">0/50 XP</span></div>
+          <div class="h-4 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden"><div id="dailyGoalBar" class="h-full bg-gradient-to-r from-green-400 to-emerald-500 transition-all" style="width:0%"></div></div>
+          <p class="text-xs text-gray-500 mt-3">💡 Recuerda: con <b>He/She/It</b> el verbo lleva <b>-s</b>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== LESSONS ===== -->
+    <section id="view-lessons" class="view hidden space-y-4 animate-slide-up">
+      <h2 class="text-2xl font-extrabold">📚 Lecciones del Presente Simple</h2>
+      <div id="lessonsList" class="grid md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- ===== LESSON DETAIL ===== -->
+    <section id="view-lesson-detail" class="view hidden animate-slide-up">
+      <button onclick="showView('lessons')" class="mb-4 text-emerald-600 font-semibold flex items-center gap-1">← Volver a lecciones</button>
+      <div id="lessonContent" class="bg-white dark:bg-gray-800 rounded-2xl p-5 md:p-7 shadow space-y-5"></div>
+    </section>
+
+    <!-- ===== VERBS ===== -->
+    <section id="view-verbs" class="view hidden space-y-5 animate-slide-up">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <h2 class="text-2xl font-extrabold">🔤 Lista de Verbos</h2>
+        <input id="verbSearch" oninput="renderVerbs()" placeholder="🔍 Buscar verbo..." class="px-4 py-2 rounded-xl border border-emerald-200 dark:border-gray-600 dark:bg-gray-800 focus:ring-2 focus:ring-emerald-400 outline-none">
+      </div>
+      <div id="verbCats" class="flex flex-wrap gap-2"></div>
+      <p class="text-sm text-gray-500"><span id="verbCount">0</span> verbos · Verás la conjugación con He/She/It · 🔊 para escuchar · ✔️ para dominar</p>
+      <div id="verbGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+    </section>
+
+    <!-- ===== CONJUGATOR ===== -->
+    <section id="view-conjugator" class="view hidden space-y-5 animate-slide-up">
+      <h2 class="text-2xl font-extrabold">⚙️ Conjugador Interactivo</h2>
+      <p class="text-gray-500">Escribe cualquier verbo y mira cómo se conjuga en presente simple con la regla de la <b>-s</b>.</p>
+      <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow max-w-lg">
+        <input id="conjInput" oninput="doConjugate()" placeholder="Escribe un verbo (ej: study, watch, go)..." class="w-full px-4 py-3 rounded-xl border-2 border-emerald-200 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-emerald-400 outline-none text-lg">
+        <div id="conjResult" class="mt-4"></div>
+      </div>
+      <div class="bg-emerald-50 dark:bg-emerald-900/20 border-l-4 border-emerald-500 p-4 rounded-r-xl max-w-lg text-sm">
+        <b>📏 Reglas de la tercera persona (He/She/It):</b>
+        <ul class="mt-2 space-y-1 list-disc pl-5">
+          <li>General: + <b>s</b> → work → work<b>s</b></li>
+          <li>Termina en -s,-sh,-ch,-x,-z,-o: + <b>es</b> → watch → watch<b>es</b></li>
+          <li>Consonante + y: <b>y→ies</b> → study → stud<b>ies</b></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== GAMES ===== -->
+    <section id="view-games" class="view hidden space-y-5 animate-slide-up">
+      <h2 class="text-2xl font-extrabold">🎮 Mini Juegos del Presente Simple</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div onclick="startFlashcards()" class="game-card bg-gradient-to-br from-teal-400 to-teal-600">🃏<span>Flashcards</span></div>
+        <div onclick="startConjGame()" class="game-card bg-gradient-to-br from-emerald-400 to-green-600">➕<span>Añade la -S</span></div>
+        <div onclick="startAffNeg()" class="game-card bg-gradient-to-br from-cyan-400 to-blue-600">🔀<span>Afirm/Negativo</span></div>
+        <div onclick="startQuestionGame()" class="game-card bg-gradient-to-br from-purple-400 to-violet-600">❓<span>Do o Does</span></div>
+        <div onclick="startFillBlank()" class="game-card bg-gradient-to-br from-yellow-400 to-orange-500">✍️<span>Completar Frase</span></div>
+        <div onclick="startSpeed()" class="game-card bg-gradient-to-br from-red-400 to-red-600">⚡<span>Velocidad</span></div>
+        <div onclick="startMatch()" class="game-card bg-gradient-to-br from-pink-400 to-rose-600">🔗<span>Emparejar</span></div>
+        <div onclick="startPronunciation()" class="game-card bg-gradient-to-br from-indigo-400 to-indigo-600">🎤<span>Pronunciación</span></div>
+      </div>
+      <div id="gameArea" class="mt-4"></div>
+    </section>
+
+    <!-- ===== QUIZ ===== -->
+    <section id="view-quiz" class="view hidden space-y-5 animate-slide-up">
+      <h2 class="text-2xl font-extrabold">✅ Evaluaciones</h2>
+      <div id="quizArea"></div>
+    </section>
+
+    <!-- ===== ACHIEVEMENTS ===== -->
+    <section id="view-achievements" class="view hidden space-y-5 animate-slide-up">
+      <h2 class="text-2xl font-extrabold">🏆 Logros e Insignias</h2>
+      <div id="achievementsGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      <div id="certArea"></div>
+    </section>
+
+    <!-- ===== PROFILE ===== -->
+    <section id="view-profile" class="view hidden space-y-5 animate-slide-up">
+      <h2 class="text-2xl font-extrabold">👤 Mi Perfil</h2>
+      <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow flex flex-col sm:flex-row items-center gap-6">
+        <div class="text-7xl bg-emerald-100 dark:bg-gray-700 rounded-full w-28 h-28 flex items-center justify-center" id="avatarDisplay">🦉</div>
+        <div class="flex-1 text-center sm:text-left">
+          <input id="nameInput" onchange="saveName()" class="text-xl font-bold bg-transparent border-b-2 border-emerald-300 outline-none focus:border-emerald-600" placeholder="Tu nombre">
+          <div id="profileLevelBadge" class="mt-2 inline-block bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-300 px-3 py-1 rounded-full text-sm font-semibold">Nivel 1</div>
+          <div class="mt-3 grid grid-cols-3 gap-2 text-center">
+            <div><div id="pXp" class="font-bold text-yellow-500">0</div><div class="text-xs text-gray-500">XP</div></div>
+            <div><div id="pVerbs" class="font-bold text-green-500">0</div><div class="text-xs text-gray-500">Verbos</div></div>
+            <div><div id="pBadges" class="font-bold text-emerald-500">0</div><div class="text-xs text-gray-500">Insignias</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow">
+        <h4 class="font-bold mb-3">🎭 Elige tu avatar</h4>
+        <div class="flex flex-wrap gap-3" id="avatarPicker"></div>
+      </div>
+      <button onclick="resetProgress()" class="text-sm text-red-500 underline">Reiniciar progreso</button>
+    </section>
+
+  </main>
+</div>
+
+<!-- Toast + Modal -->
+<div id="toast" class="fixed bottom-24 md:bottom-6 left-1/2 -translate-x-1/2 z-[100] bg-gray-900 text-white px-5 py-3 rounded-xl shadow-2xl font-semibold opacity-0 pointer-events-none transition-all"></div>
+<div id="rewardModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+  <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 text-center max-w-sm w-full animate-pop">
+    <div id="rewardIcon" class="text-7xl mb-3 animate-bounce-slow">🎉</div>
+    <h3 id="rewardTitle" class="text-2xl font-extrabold mb-1">¡Excelente!</h3>
+    <p id="rewardText" class="text-gray-500 mb-5">Has completado la actividad</p>
+    <button onclick="closeReward()" class="bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold px-8 py-3 rounded-xl hover:scale-105 transition w-full">¡Continuar!</button>
+  </div>
+</div>
+
+<style>
+  .sidebtn{text-align:left;padding:.6rem .9rem;border-radius:.75rem;font-weight:600;font-size:.9rem;transition:all .2s;}
+  .sidebtn:hover{background:#d1fae5;}.dark .sidebtn:hover{background:#374151;}
+  .sidebtn.active{background:linear-gradient(to right,#10b981,#14b8a6);color:white;}
+  .game-card{cursor:pointer;color:white;border-radius:1rem;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;font-weight:700;font-size:2rem;transition:all .3s;box-shadow:0 8px 20px rgba(0,0,0,.1);}
+  .game-card span{font-size:.9rem;}.game-card:hover{transform:translateY(-6px) scale(1.03);}
+</style>
+
+<script>
+/* ============================================================
+   DATA: VERBOS EN PRESENTE SIMPLE (100+)
+   [infinitivo, traducción, 3ra persona, emoji, categoría, ejemplo]
+   ============================================================ */
+const RAW_VERBS = [
+  // Rutina diaria
+  ["wake up","despertarse","wakes up","⏰","Rutina","I wake up at 6.","Me despierto a las 6."],
+  ["get up","levantarse","gets up","🛏️","Rutina","She gets up early.","Ella se levanta temprano."],
+  ["wash","lavar","washes","🧼","Rutina","He washes his face.","Él se lava la cara."],
+  ["brush","cepillar","brushes","🪥","Rutina","I brush my teeth.","Me cepillo los dientes."],
+  ["shower","ducharse","showers","🚿","Rutina","She showers every day.","Ella se ducha cada día."],
+  ["dress","vestirse","dresses","👕","Rutina","He dresses fast.","Él se viste rápido."],
+  ["sleep","dormir","sleeps","😴","Rutina","The baby sleeps.","El bebé duerme."],
+  ["rest","descansar","rests","🛋️","Rutina","We rest on Sunday.","Descansamos el domingo."],
+  // Estudio y trabajo
+  ["study","estudiar","studies","📖","Estudio","I study English.","Estudio inglés."],
+  ["learn","aprender","learns","🧠","Estudio","She learns math.","Ella aprende matemáticas."],
+  ["teach","enseñar","teaches","👩‍🏫","Estudio","He teaches kids.","Él enseña a niños."],
+  ["read","leer","reads","📕","Estudio","I read a book.","Leo un libro."],
+  ["write","escribir","writes","✍️","Estudio","She writes notes.","Ella escribe notas."],
+  ["work","trabajar","works","💼","Estudio","He works here.","Él trabaja aquí."],
+  ["practice","practicar","practices","🎯","Estudio","We practice daily.","Practicamos diario."],
+  ["think","pensar","thinks","💭","Estudio","I think so.","Creo que sí."],
+  ["know","saber","knows","🎓","Estudio","She knows the answer.","Ella sabe la respuesta."],
+  ["understand","entender","understands","💡","Estudio","He understands.","Él entiende."],
+  // Comida
+  ["eat","comer","eats","🍽️","Comida","She eats pizza.","Ella come pizza."],
+  ["drink","beber","drinks","🥤","Comida","I drink water.","Bebo agua."],
+  ["cook","cocinar","cooks","👨‍🍳","Comida","He cooks dinner.","Él cocina la cena."],
+  ["taste","probar","tastes","👅","Comida","She tastes the soup.","Ella prueba la sopa."],
+  ["bake","hornear","bakes","🍰","Comida","Mom bakes a cake.","Mamá hornea un pastel."],
+  ["order","pedir","orders","📋","Comida","He orders coffee.","Él pide café."],
+  // Movimiento
+  ["go","ir","goes","🚶","Movimiento","She goes to school.","Ella va a la escuela."],
+  ["come","venir","comes","🤙","Movimiento","He comes home.","Él viene a casa."],
+  ["walk","caminar","walks","🚶‍♂️","Movimiento","I walk to work.","Camino al trabajo."],
+  ["run","correr","runs","🏃","Movimiento","She runs fast.","Ella corre rápido."],
+  ["jump","saltar","jumps","🤸","Movimiento","The dog jumps.","El perro salta."],
+  ["swim","nadar","swims","🏊","Movimiento","He swims well.","Él nada bien."],
+  ["fly","volar","flies","✈️","Movimiento","The bird flies.","El pájaro vuela."],
+  ["drive","conducir","drives","🚗","Movimiento","She drives a car.","Ella conduce un carro."],
+  ["ride","montar","rides","🚴","Movimiento","He rides a bike.","Él monta bicicleta."],
+  ["travel","viajar","travels","🧳","Movimiento","We travel a lot.","Viajamos mucho."],
+  ["move","mover","moves","➡️","Movimiento","She moves the box.","Ella mueve la caja."],
+  // Comunicación
+  ["speak","hablar","speaks","🗣️","Comunicación","She speaks English.","Ella habla inglés."],
+  ["talk","conversar","talks","💬","Comunicación","He talks a lot.","Él habla mucho."],
+  ["say","decir","says","🗨️","Comunicación","She says hello.","Ella dice hola."],
+  ["tell","contar","tells","📢","Comunicación","He tells a story.","Él cuenta una historia."],
+  ["ask","preguntar","asks","🙋","Comunicación","I ask a question.","Hago una pregunta."],
+  ["answer","responder","answers","✅","Comunicación","She answers fast.","Ella responde rápido."],
+  ["call","llamar","calls","📞","Comunicación","He calls his mom.","Él llama a su mamá."],
+  ["listen","escuchar","listens","👂","Comunicación","She listens to music.","Ella escucha música."],
+  // Casa
+  ["clean","limpiar","cleans","🧹","Casa","She cleans the house.","Ella limpia la casa."],
+  ["open","abrir","opens","🚪","Casa","He opens the door.","Él abre la puerta."],
+  ["close","cerrar","closes","🔒","Casa","She closes the window.","Ella cierra la ventana."],
+  ["fix","arreglar","fixes","🔧","Casa","He fixes the chair.","Él arregla la silla."],
+  ["paint","pintar","paints","🎨","Casa","She paints the wall.","Ella pinta la pared."],
+  ["water","regar","waters","🌱","Casa","He waters plants.","Él riega las plantas."],
+  // Compras y dinero
+  ["buy","comprar","buys","🛒","Compras","I buy bread.","Compro pan."],
+  ["sell","vender","sells","💰","Compras","He sells cars.","Él vende carros."],
+  ["pay","pagar","pays","💳","Compras","She pays the bill.","Ella paga la cuenta."],
+  ["cost","costar","costs","🏷️","Compras","It costs ten dollars.","Cuesta diez dólares."],
+  ["save","ahorrar","saves","🏦","Compras","We save money.","Ahorramos dinero."],
+  // Tiempo libre
+  ["play","jugar","plays","⚽","Ocio","We play soccer.","Jugamos fútbol."],
+  ["watch","ver/mirar","watches","📺","Ocio","I watch TV.","Veo televisión."],
+  ["dance","bailar","dances","💃","Ocio","She dances well.","Ella baila bien."],
+  ["sing","cantar","sings","🎤","Ocio","He sings a song.","Él canta una canción."],
+  ["draw","dibujar","draws","✏️","Ocio","She draws a cat.","Ella dibuja un gato."],
+  ["paint","pintar","paints","🖌️","Ocio","He paints pictures.","Él pinta cuadros."],
+  ["relax","relajarse","relaxes","🧘","Ocio","We relax at home.","Nos relajamos en casa."],
+  ["enjoy","disfrutar","enjoys","😊","Ocio","She enjoys music.","Ella disfruta la música."],
+  // Emociones y estados
+  ["like","gustar","likes","👍","Emociones","I like coffee.","Me gusta el café."],
+  ["love","amar","loves","❤️","Emociones","She loves dogs.","Ella ama los perros."],
+  ["hate","odiar","hates","👎","Emociones","He hates rain.","Él odia la lluvia."],
+  ["want","querer","wants","🙏","Emociones","I want pizza.","Quiero pizza."],
+  ["need","necesitar","needs","🆘","Emociones","She needs help.","Ella necesita ayuda."],
+  ["feel","sentir","feels","💗","Emociones","He feels happy.","Él se siente feliz."],
+  ["hope","esperar","hopes","🌈","Emociones","I hope so.","Eso espero."],
+  ["miss","extrañar","misses","🥺","Emociones","She misses home.","Ella extraña su hogar."],
+  // Acciones generales
+  ["have","tener","has","🤲","General","She has a car.","Ella tiene un carro."],
+  ["do","hacer","does","✔️","General","He does homework.","Él hace la tarea."],
+  ["make","hacer/crear","makes","🔨","General","She makes a cake.","Ella hace un pastel."],
+  ["get","obtener","gets","🎁","General","He gets a gift.","Él recibe un regalo."],
+  ["give","dar","gives","🎀","General","She gives a book.","Ella da un libro."],
+  ["take","tomar","takes","✋","General","He takes the bus.","Él toma el autobús."],
+  ["put","poner","puts","📥","General","She puts the key here.","Ella pone la llave aquí."],
+  ["find","encontrar","finds","🔍","General","He finds his phone.","Él encuentra su teléfono."],
+  ["use","usar","uses","🛠️","General","She uses a computer.","Ella usa una computadora."],
+  ["help","ayudar","helps","🤝","General","He helps his friend.","Él ayuda a su amigo."],
+  ["start","empezar","starts","🚦","General","The class starts.","La clase empieza."],
+  ["finish","terminar","finishes","🏁","General","She finishes work.","Ella termina el trabajo."],
+  ["stop","parar","stops","🛑","General","The bus stops.","El autobús para."],
+  ["wait","esperar","waits","⏳","General","He waits for me.","Él me espera."],
+  ["stay","quedarse","stays","🏠","General","She stays home.","Ella se queda en casa."],
+  ["live","vivir","lives","🏡","General","We live in Colombia.","Vivimos en Colombia."],
+  ["visit","visitar","visits","🚪","General","He visits grandma.","Él visita a la abuela."],
+  ["meet","conocer/reunirse","meets","👋","General","She meets friends.","Ella se reúne con amigos."],
+  ["look","mirar","looks","👀","General","He looks at the sky.","Él mira el cielo."],
+  ["see","ver","sees","👁️","General","She sees a bird.","Ella ve un pájaro."],
+  ["hear","oír","hears","👂","General","He hears a noise.","Él oye un ruido."],
+  ["show","mostrar","shows","🖼️","General","She shows a photo.","Ella muestra una foto."],
+  ["carry","llevar","carries","📦","General","He carries a box.","Él lleva una caja."],
+  ["try","intentar","tries","💪","General","She tries hard.","Ella se esfuerza."],
+  ["cry","llorar","cries","😢","Emociones","The baby cries.","El bebé llora."],
+  ["smile","sonreír","smiles","😄","Emociones","She smiles a lot.","Ella sonríe mucho."],
+  ["laugh","reír","laughs","😂","Emociones","He laughs loudly.","Él ríe fuerte."],
+  ["win","ganar","wins","🏆","General","She wins the game.","Ella gana el juego."],
+  ["lose","perder","loses","😔","General","He loses the key.","Él pierde la llave."],
+  ["choose","elegir","chooses","☑️","General","She chooses blue.","Ella elige el azul."],
+  ["remember","recordar","remembers","🧠","General","He remembers names.","Él recuerda nombres."],
+  ["forget","olvidar","forgets","🌀","General","She forgets things.","Ella olvida cosas."],
+  ["believe","creer","believes","🙏","Emociones","He believes you.","Él te cree."],
+  ["change","cambiar","changes","🔄","General","She changes plans.","Ella cambia de planes."],
+  ["turn","girar","turns","↩️","General","He turns left.","Él gira a la izquierda."],
+  ["push","empujar","pushes","👐","General","She pushes the door.","Ella empuja la puerta."],
+  ["catch","atrapar","catches","🧤","General","He catches the ball.","Él atrapa la pelota."],
+  ["throw","lanzar","throws","🎾","General","She throws the ball.","Ella lanza la pelota."],
+  ["build","construir","builds","🏗️","General","He builds houses.","Él construye casas."],
+  ["grow","crecer","grows","🌳","General","The plant grows.","La planta crece."],
+];
+// Detectar regla de -s automáticamente
+function esRule(base){
+  if(/(s|sh|ch|x|z|o)$/.test(base)) return 'es';
+  if(/[^aeiou]y$/.test(base)) return 'ies';
+  return 's';
+}
+function conjugate(base){
+  base=base.trim().toLowerCase();
+  const r=esRule(base.split(' ')[0]);
+  let word=base.split(' ')[0], rest=base.split(' ').slice(1).join(' ');
+  let third;
+  if(base==='have')third='has';
+  else if(word==='go')third='goes';
+  else if(word==='do')third='does';
+  else if(r==='es')third=word+'es';
+  else if(r==='ies')third=word.slice(0,-1)+'ies';
+  else third=word+'s';
+  return {third:(third+(rest?' '+rest:'')), rule:r};
+}
+const VERBS=RAW_VERBS.map(([en,es,third,img,cat,ex,exEs])=>({en,es,third,img,cat,ex,exEs,rule:esRule(en.split(' ')[0])}));
+
+/* ============================================================
+   LECCIONES
+   ============================================================ */
+const LESSONS=[
+  {id:1,icon:"🎯",title:"¿Qué es el Presente Simple?",color:"from-emerald-500 to-green-500",
+   obj:"Entender cuándo y cómo usar el presente simple en inglés.",
+   sections:[
+     {h:"1. ¿Para qué sirve?",p:"El presente simple se usa para hablar de <b>rutinas, hábitos, hechos y verdades generales</b>."},
+     {h:"Lo usamos para...",list:["⏰ Rutinas: <b>I wake up at 6.</b> (Me despierto a las 6)","🔁 Hábitos: <b>She drinks coffee every day.</b>","🌍 Hechos: <b>The sun rises in the east.</b>","❤️ Gustos: <b>I like pizza.</b>"]},
+     {h:"⏱️ Palabras clave (frecuencia)",table:[["Siempre","always"],["Usualmente","usually"],["A menudo","often"],["A veces","sometimes"],["Nunca","never"],["Todos los días","every day"]]},
+     {h:"✨ Estructura afirmativa",box:"Sujeto + Verbo + Complemento<br>I / You / We / They → verbo normal<br>He / She / It → verbo + S"},
+     {h:"Ejemplos",list:["<b>I play soccer.</b> → Yo juego fútbol.","<b>He plays soccer.</b> → Él juega fútbol.","<b>They study English.</b> → Ellos estudian inglés."]},
+   ],
+   quiz:[
+     {q:"El presente simple se usa para...",opts:["Acciones de ayer","Rutinas y hábitos","Acciones de mañana"],a:1},
+     {q:"¿Cuál significa 'siempre'?",opts:["never","always","sometimes"],a:1},
+     {q:"Completa: They ___ soccer.",opts:["plays","play","playing"],a:1},
+     {q:"'Every day' significa...",opts:["Nunca","A veces","Todos los días"],a:2},
+   ]},
+  {id:2,icon:"➕",title:"La regla de la -S (He/She/It)",color:"from-teal-500 to-cyan-500",
+   obj:"Dominar cómo cambia el verbo en la tercera persona.",
+   sections:[
+     {h:"1. La regla de oro",p:"Con <b>He, She, It</b> el verbo casi siempre lleva una <b>-s</b> al final."},
+     {h:"Comparación",table:[["I work","✔️"],["You work","✔️"],["We work","✔️"],["They work","✔️"],["He work<b>s</b>","➕S"],["She work<b>s</b>","➕S"],["It work<b>s</b>","➕S"]]},
+     {h:"2. Reglas especiales",list:["Termina en <b>-s,-sh,-ch,-x,-o</b> → +<b>es</b>: watch → watch<b>es</b>, go → go<b>es</b>","Consonante + <b>y</b> → <b>y→ies</b>: study → stud<b>ies</b>, fly → fl<b>ies</b>","Vocal + y → solo +s: play → play<b>s</b>","<b>have</b> → <b>has</b> (irregular)"]},
+     {h:"✨ Ejemplos",box:"study → studies · watch → watches<br>go → goes · have → has · play → plays"},
+     {h:"3. Practica mentalmente",list:["She (do) → <b>does</b>","He (miss) → <b>misses</b>","It (fly) → <b>flies</b>","She (like) → <b>likes</b>"]},
+   ],
+   quiz:[
+     {q:"He (study) → ?",opts:["studys","studies","studyes"],a:1},
+     {q:"She (watch) → ?",opts:["watchs","watches","watchies"],a:1},
+     {q:"It (go) → ?",opts:["gos","goes","goies"],a:1},
+     {q:"He (have) → ?",opts:["haves","has","haves"],a:1},
+     {q:"She (play) → ?",opts:["plaies","plays","playes"],a:1},
+   ]},
+  {id:3,icon:"🚫",title:"Oraciones Negativas",color:"from-cyan-500 to-blue-500",
+   obj:"Aprender a decir que NO haces algo.",
+   sections:[
+     {h:"1. Usamos DON'T y DOESN'T",p:"Para negar usamos un auxiliar antes del verbo. ¡El verbo vuelve a su forma normal!"},
+     {h:"✨ Estructura",box:"I/You/We/They + <b>don't</b> + verbo<br>He/She/It + <b>doesn't</b> + verbo"},
+     {h:"Ejemplos con DON'T",list:["<b>I don't like coffee.</b> → No me gusta el café.","<b>They don't work here.</b> → Ellos no trabajan aquí.","<b>We don't play tennis.</b> → No jugamos tenis."]},
+     {h:"Ejemplos con DOESN'T",list:["<b>She doesn't eat meat.</b> → Ella no come carne.","<b>He doesn't study.</b> → Él no estudia.","⚠️ NO: <s>He doesn't studies</s>. El verbo va normal."]},
+     {h:"💡 Recuerda",p:"Con <b>doesn't</b> el verbo <b>pierde la -s</b> porque el auxiliar ya la tiene: <br>She work<b>s</b> → She <b>doesn't work</b>."},
+   ],
+   quiz:[
+     {q:"Yo no como carne:",opts:["I don't eat meat","I doesn't eat meat","I don't eats meat"],a:0},
+     {q:"Ella no estudia:",opts:["She doesn't studies","She doesn't study","She don't study"],a:1},
+     {q:"Ellos no trabajan:",opts:["They doesn't work","They don't works","They don't work"],a:2},
+     {q:"Él no juega:",opts:["He doesn't play","He don't play","He doesn't plays"],a:0},
+   ]},
+  {id:4,icon:"❓",title:"Preguntas con Do / Does",color:"from-blue-500 to-indigo-500",
+   obj:"Hacer preguntas en presente simple correctamente.",
+   sections:[
+     {h:"1. Preguntas Sí/No",p:"Empezamos con <b>Do</b> o <b>Does</b>."},
+     {h:"✨ Estructura",box:"<b>Do</b> + I/You/We/They + verbo...?<br><b>Does</b> + He/She/It + verbo...?"},
+     {h:"Ejemplos",list:["<b>Do you speak English?</b> → ¿Hablas inglés?","<b>Does she work here?</b> → ¿Ella trabaja aquí?","<b>Do they play soccer?</b> → ¿Ellos juegan fútbol?"]},
+     {h:"2. Respuestas cortas",table:[["Do you...?","Yes, I do / No, I don't"],["Does she...?","Yes, she does / No, she doesn't"],["Do they...?","Yes, they do / No, they don't"]]},
+     {h:"3. Preguntas con WH",list:["<b>What do you study?</b> → ¿Qué estudias?","<b>Where does he live?</b> → ¿Dónde vive él?","<b>When does she work?</b> → ¿Cuándo trabaja ella?"]},
+     {h:"⚠️ ¡Ojo!",p:"Después de <b>Does</b> el verbo NO lleva -s: <br><s>Does she works?</s> ✅ <b>Does she work?</b>"},
+   ],
+   quiz:[
+     {q:"¿Hablas inglés?",opts:["You speak English?","Do you speak English?","Does you speak English?"],a:1},
+     {q:"¿Ella vive aquí?",opts:["Does she lives here?","Do she live here?","Does she live here?"],a:2},
+     {q:"Respuesta a 'Does he work?'",opts:["Yes, he do","Yes, he does","Yes, he works"],a:1},
+     {q:"¿Dónde vive él?",opts:["Where does he live?","Where do he lives?","Where does he lives?"],a:0},
+   ]},
+];
+
+/* ============================================================
+   ESTADO
+   ============================================================ */
+let S=JSON.parse(localStorage.getItem('ps_state')||'null')||{
+  name:"Explorador",avatar:"🦉",xp:0,gems:0,streak:1,lastDay:new Date().toDateString(),
+  mastered:[],lessonsDone:[],timeMin:0,dailyXp:0,badges:[]
+};
+function save(){localStorage.setItem('ps_state',JSON.stringify(S));refreshUI();}
+(function(){const today=new Date().toDateString();if(S.lastDay!==today){const diff=(new Date(today)-new Date(S.lastDay))/86400000;if(diff===1)S.streak++;else if(diff>1)S.streak=1;S.lastDay=today;S.dailyXp=0;save();}})();
+
+const LEVELS=[[0,"Principiante","🥚"],[100,"Aprendiz","🐣"],[250,"Practicante","🐥"],[500,"Competente","🦜"],[900,"Avanzado","🦉"],[1500,"Maestro","🦅"]];
+function getLevel(){let l=0;LEVELS.forEach((L,i)=>{if(S.xp>=L[0])l=i});return l;}
+function addXP(n){S.xp+=n;S.gems+=Math.floor(n/5);S.dailyXp+=n;playSound('xp');save();}
+
+/* ============================================================
+   UI CORE
+   ============================================================ */
+let soundOn=true;
+function playSound(type){if(!soundOn)return;try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);const f={correct:[523,659,784],wrong:[200,150],xp:[660,880],click:[440]}[type]||[440];o.frequency.value=f[0];g.gain.value=.08;o.start();f.forEach((fr,i)=>o.frequency.setValueAtTime(fr,ctx.currentTime+i*.1));g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.35);o.stop(ctx.currentTime+.35);}catch(e){}}
+function toggleSound(){soundOn=!soundOn;document.getElementById('soundBtn').textContent=soundOn?'🔊':'🔇';}
+function toggleDark(){document.documentElement.classList.toggle('dark');localStorage.setItem('ps_dark',document.documentElement.classList.contains('dark'));}
+if(localStorage.getItem('ps_dark')==='true')document.documentElement.classList.add('dark');
+function speak(t){if('speechSynthesis'in window){const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.85;speechSynthesis.speak(u);}}
+function showView(v){document.querySelectorAll('.view').forEach(e=>e.classList.add('hidden'));document.getElementById('view-'+v)?.classList.remove('hidden');document.querySelectorAll('.sidebtn').forEach(b=>b.classList.remove('active'));event?.target?.closest?.('.sidebtn')?.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});if(v==='verbs')renderVerbs();if(v==='lessons')renderLessons();if(v==='achievements')renderAchievements();if(v==='profile')renderProfile();if(v==='dashboard')renderDashboard();if(v==='quiz')renderQuizHub();if(v==='conjugator')doConjugate();}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.style.opacity=1;t.style.transform='translate(-50%,-6px)';setTimeout(()=>{t.style.opacity=0;t.style.transform='translate(-50%,0)';},2200);}
+function reward(icon,title,text){document.getElementById('rewardIcon').textContent=icon;document.getElementById('rewardTitle').textContent=title;document.getElementById('rewardText').textContent=text;const m=document.getElementById('rewardModal');m.classList.remove('hidden');m.classList.add('flex');playSound('correct');}
+function closeReward(){const m=document.getElementById('rewardModal');m.classList.add('hidden');m.classList.remove('flex');}
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+function refreshUI(){document.getElementById('stat-xp').textContent=S.xp;document.getElementById('stat-gems').textContent=S.gems;document.getElementById('stat-streak').textContent=S.streak;const lvl=getLevel();const cur=LEVELS[lvl][0],next=LEVELS[lvl+1]?LEVELS[lvl+1][0]:cur+600;const pct=Math.min(100,((S.xp-cur)/(next-cur))*100);document.getElementById('levelBar').style.width=pct+'%';document.getElementById('sideLevel').textContent=lvl+1;document.getElementById('sideLevelName').textContent=LEVELS[lvl][1];}
+function renderDashboard(){document.getElementById('welcomeName').textContent=S.name;document.getElementById('dashStreak').textContent=S.streak;document.getElementById('dashVerbs').textContent=S.mastered.length;document.getElementById('dashLessons').textContent=S.lessonsDone.length;document.getElementById('dashTime').textContent=S.timeMin+'m';const total=LESSONS.length*2+40;const done=S.lessonsDone.length+Math.floor(S.mastered.length/2);const pct=Math.min(100,Math.round(done/total*100));document.getElementById('progPercent').textContent=pct+'%';document.getElementById('progRing').style.strokeDashoffset=238-(238*pct/100);const gp=Math.min(100,(S.dailyXp/50)*100);document.getElementById('dailyGoalBar').style.width=gp+'%';document.getElementById('dailyGoalText').textContent=S.dailyXp+'/50 XP';const pc=document.getElementById('pathContainer');pc.innerHTML='';LESSONS.forEach(l=>{const done=S.lessonsDone.includes(l.id);pc.innerHTML+=`<div onclick="openLesson(${l.id})" class="cursor-pointer bg-gradient-to-r ${l.color} text-white rounded-2xl p-5 card-hover flex items-center gap-4"><div class="text-4xl">${l.icon}</div><div class="flex-1"><div class="font-bold">Lección ${l.id}</div><div class="text-sm opacity-90">${l.title}</div></div><div class="text-2xl">${done?'✅':'▶️'}</div></div>`;});refreshUI();}
+
+/* ============================================================
+   LESSONS
+   ============================================================ */
+function renderLessons(){const c=document.getElementById('lessonsList');c.innerHTML='';LESSONS.forEach(l=>{const done=S.lessonsDone.includes(l.id);c.innerHTML+=`<div onclick="openLesson(${l.id})" class="cursor-pointer bg-white dark:bg-gray-800 rounded-2xl overflow-hidden card-hover shadow"><div class="bg-gradient-to-r ${l.color} p-5 text-white flex items-center gap-3"><span class="text-4xl">${l.icon}</span><div><div class="text-xs opacity-80">LECCIÓN ${l.id}</div><h3 class="font-bold text-lg leading-tight">${l.title}</h3></div></div><div class="p-4"><p class="text-sm text-gray-500">${l.obj}</p><div class="mt-3 flex items-center justify-between"><span class="text-xs font-semibold ${done?'text-green-500':'text-emerald-500'}">${done?'✅ Completada':'▶️ Empezar'}</span><span class="text-sm">→</span></div></div></div>`;});}
+function openLesson(id){const l=LESSONS.find(x=>x.id===id);const c=document.getElementById('lessonContent');let html=`<div class="flex items-center gap-3"><span class="text-5xl">${l.icon}</span><div><div class="text-xs text-emerald-500 font-bold">LECCIÓN ${l.id}</div><h2 class="text-2xl font-extrabold">${l.title}</h2></div></div><div class="bg-emerald-50 dark:bg-emerald-900/20 border-l-4 border-emerald-500 p-4 rounded-r-xl"><b>🎯 Objetivo:</b> ${l.obj}</div>`;l.sections.forEach(s=>{html+=`<div class="pt-2"><h3 class="font-bold text-lg mb-2 text-emerald-600">${s.h}</h3>`;if(s.p)html+=`<p class="text-gray-600 dark:text-gray-300 mb-2">${s.p}</p>`;if(s.box)html+=`<div class="bg-gradient-to-r ${l.color} text-white text-center font-bold text-lg py-4 rounded-xl my-2">${s.box}</div>`;if(s.list){html+='<ul class="space-y-1">';s.list.forEach(li=>html+=`<li class="flex gap-2"><span class="text-emerald-400">•</span><span>${li}</span></li>`);html+='</ul>';}if(s.table){html+='<div class="grid grid-cols-2 gap-1 max-w-md">';s.table.forEach(([a,b])=>html+=`<div class="bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded-lg text-sm">${a}</div><div class="bg-emerald-100 dark:bg-emerald-900/40 px-3 py-2 rounded-lg text-sm font-semibold">${b}</div>`);html+='</div>';}html+='</div>';});html+=`<div class="pt-4 border-t dark:border-gray-700"><h3 class="font-bold text-lg mb-3">📝 Mini evaluación</h3><div id="lessonQuiz"></div></div>`;c.innerHTML=html;showView('lesson-detail');renderLessonQuiz(l);S.timeMin+=2;save();}
+function renderLessonQuiz(l){const box=document.getElementById('lessonQuiz');let idx=0,correct=0;function q(){if(idx>=l.quiz.length){const passed=correct>=Math.ceil(l.quiz.length*0.6);box.innerHTML=`<div class="text-center p-4"><div class="text-5xl mb-2">${passed?'🎉':'💪'}</div><p class="font-bold text-lg">${correct}/${l.quiz.length} correctas</p><p class="text-gray-500 mb-3">${passed?'¡Lección completada!':'Repasa e inténtalo de nuevo'}</p></div>`;if(passed&&!S.lessonsDone.includes(l.id)){S.lessonsDone.push(l.id);addXP(30);checkBadges();reward('🎓','¡Lección '+l.id+' completada!','+30 XP · ¡Sigue así!');}return;}const it=l.quiz[idx];box.innerHTML=`<div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4"><p class="font-semibold mb-3">${idx+1}. ${it.q}</p><div class="space-y-2">${it.opts.map((o,i)=>`<button onclick="window._ans(${i})" class="w-full text-left px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 hover:border-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition">${o}</button>`).join('')}</div></div>`;window._ans=(i)=>{const btns=box.querySelectorAll('button');btns.forEach(b=>b.disabled=true);if(i===it.a){btns[i].classList.add('!border-green-500','bg-green-100','dark:bg-green-900/40');correct++;playSound('correct');addXP(5);}else{btns[i].classList.add('!border-red-500','bg-red-100','shake');btns[it.a].classList.add('!border-green-500','bg-green-100');playSound('wrong');}setTimeout(()=>{idx++;q();},900);};}q();}
+
+/* ============================================================
+   VERBS
+   ============================================================ */
+let currentCat="Todas";
+function renderVerbs(){const cats=["Todas",...new Set(VERBS.map(v=>v.cat))];document.getElementById('verbCats').innerHTML=cats.map(c=>`<button onclick="currentCat='${c}';renderVerbs()" class="px-3 py-1.5 rounded-full text-sm font-semibold transition ${currentCat===c?'bg-emerald-600 text-white':'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300'}">${c}</button>`).join('');const q=(document.getElementById('verbSearch').value||'').toLowerCase();let list=VERBS;if(currentCat!=="Todas")list=list.filter(v=>v.cat===currentCat);if(q)list=list.filter(v=>v.en.includes(q)||v.es.toLowerCase().includes(q));document.getElementById('verbCount').textContent=VERBS.length;const ruleColor={s:'bg-green-100 text-green-600','es':'bg-orange-100 text-orange-600','ies':'bg-purple-100 text-purple-600'};g=document.getElementById('verbGrid');g.innerHTML=list.map(v=>{const m=S.mastered.includes(v.en);return `<div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow card-hover"><div class="flex justify-between items-start"><span class="text-4xl">${v.img}</span><span class="text-xs font-bold px-2 py-0.5 rounded-full ${ruleColor[v.rule]}">+${v.rule}</span></div><div class="mt-2 font-extrabold text-lg">${v.en}</div><div class="text-sm text-gray-500 mb-1">${v.es}</div><div class="text-xs bg-emerald-50 dark:bg-emerald-900/30 rounded-lg px-2 py-1 inline-block font-semibold text-emerald-600">He/She → ${v.third}</div><div class="text-xs text-gray-400 mt-2 italic">"${v.ex}"</div><div class="text-xs text-gray-400">${v.exEs}</div><div class="flex gap-2 mt-3"><button onclick="speak('${v.en}. ${v.third}')" class="flex-1 bg-blue-100 dark:bg-blue-900/40 text-blue-600 rounded-lg py-1.5 text-sm font-semibold">🔊 Oír</button><button onclick="toggleMastered('${v.en}')" class="flex-1 rounded-lg py-1.5 text-sm font-semibold ${m?'bg-green-500 text-white':'bg-gray-100 dark:bg-gray-700 text-gray-500'}">${m?'✔️ Dominado':'Marcar'}</button></div></div>`;}).join('');}
+function toggleMastered(en){const i=S.mastered.indexOf(en);if(i<0){S.mastered.push(en);addXP(2);toast('✅ +2 XP · Verbo dominado');}else S.mastered.splice(i,1);save();renderVerbs();checkBadges();}
+
+/* ============================================================
+   CONJUGATOR
+   ============================================================ */
+function doConjugate(){const inp=document.getElementById('conjInput');if(!inp)return;const val=inp.value.trim().toLowerCase();const res=document.getElementById('conjResult');if(!val){res.innerHTML='<p class="text-gray-400 text-center py-6">Escribe un verbo arriba ☝️</p>';return;}const c=conjugate(val);const ruleName={s:'Regla general (+s)','es':'Termina en s/sh/ch/x/o (+es)','ies':'Consonante + y (y→ies)'};const pron=['I','You','We','They'];res.innerHTML=`<div class="space-y-2">${pron.map(p=>`<div class="flex justify-between items-center bg-gray-100 dark:bg-gray-700 rounded-lg px-4 py-2"><span class="font-semibold">${p}</span><span>${val}</span></div>`).join('')}${['He','She','It'].map(p=>`<div class="flex justify-between items-center bg-emerald-100 dark:bg-emerald-900/40 rounded-lg px-4 py-2"><span class="font-semibold">${p}</span><span class="font-bold text-emerald-600">${c.third} ✨</span></div>`).join('')}</div><div class="mt-3 text-center text-sm bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-lg py-2">📏 ${ruleName[c.rule]}</div><button onclick="speak('${val}. ${c.third}')" class="mt-3 w-full bg-blue-500 text-white rounded-lg py-2 font-bold">🔊 Escuchar conjugación</button>`;}
+
+/* ============================================================
+   GAMES
+   ============================================================ */
+function rnd(arr,n){return[...arr].sort(()=>Math.random()-.5).slice(0,n);}
+const GA=()=>document.getElementById('gameArea');
+
+// FLASHCARDS
+function startFlashcards(){const cards=rnd(VERBS,10);let i=0;function show(){const v=cards[i];GA().innerHTML=`<div class="max-w-md mx-auto text-center"><p class="text-sm text-gray-500 mb-2">Tarjeta ${i+1}/${cards.length}</p><div class="flip-card h-64 cursor-pointer" onclick="this.classList.toggle('flipped')"><div class="flip-inner h-full"><div class="flip-front bg-gradient-to-br from-teal-400 to-teal-600 text-white rounded-3xl flex flex-col items-center justify-center gap-3"><span class="text-6xl">${v.img}</span><span class="text-3xl font-extrabold">${v.en}</span><button onclick="event.stopPropagation();speak('${v.en}')" class="bg-white/20 px-4 py-1 rounded-full">🔊</button><span class="text-xs opacity-80">Toca para voltear</span></div><div class="flip-back bg-white dark:bg-gray-800 border-4 border-teal-400 rounded-3xl flex flex-col items-center justify-center gap-2"><span class="text-2xl font-bold text-teal-500">${v.es}</span><span class="text-sm bg-emerald-100 dark:bg-emerald-900/40 px-3 py-1 rounded-full text-emerald-600 font-bold">He/She → ${v.third}</span><p class="text-sm text-gray-500 px-4 italic">"${v.ex}"</p></div></div></div><div class="flex gap-3 mt-4"><button onclick="window._fprev()" class="flex-1 bg-gray-200 dark:bg-gray-700 rounded-xl py-3 font-bold">← Anterior</button><button onclick="window._fnext()" class="flex-1 bg-teal-500 text-white rounded-xl py-3 font-bold">Siguiente →</button></div></div>`;}window._fnext=()=>{if(i<cards.length-1){i++;show();}else{addXP(10);reward('🃏','¡Flashcards completadas!','+10 XP');}};window._fprev=()=>{if(i>0){i--;show();}};show();}
+
+// CONJ GAME (añade la -s)
+function startConjGame(){const verbs=rnd(VERBS,8);let i=0,score=0;function q(){if(i>=verbs.length){addXP(score*3);reward('➕','¡Regla dominada!',score+'/'+verbs.length+' · +'+(score*3)+' XP');return;}const v=verbs[i];let wrong=[v.en+'s',v.en+'es',v.en.slice(0,-1)+'ies'].filter(w=>w!==v.third);const opts=rnd([v.third,...rnd(wrong,2)],3);GA().innerHTML=`<div class="max-w-md mx-auto text-center"><p class="text-sm text-gray-500 mb-2">${i+1}/${verbs.length}</p><div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow"><span class="text-5xl">${v.img}</span><p class="text-2xl font-bold mt-3 mb-1">She ___ (${v.en})</p><p class="text-sm text-gray-400 mb-4">Conjuga para He/She/It</p><div class="grid gap-2">${opts.map(o=>`<button onclick="window._cg('${o}','${v.third}',this)" class="py-3 rounded-xl border-2 border-emerald-200 dark:border-gray-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-900/30">${o}</button>`).join('')}</div></div></div>`;}window._cg=(pick,ans,el)=>{const btns=GA().querySelectorAll('button');btns.forEach(b=>b.disabled=true);if(pick===ans){el.classList.add('!border-green-500','bg-green-100');score++;playSound('correct');}else{el.classList.add('!border-red-500','bg-red-100','shake');[...btns].find(b=>b.textContent===ans)?.classList.add('!border-green-500','bg-green-100');playSound('wrong');}setTimeout(()=>{i++;q();},900);};q();}
+
+// AFF/NEG
+function startAffNeg(){const items=[{s:"He plays soccer.",neg:"He doesn't play soccer.",aff:true},{s:"She doesn't eat meat.",neg:"She eats meat.",aff:false},{s:"They work here.",neg:"They don't work here.",aff:true},{s:"I don't like coffee.",neg:"I like coffee.",aff:false},{s:"She studies English.",neg:"She doesn't study English.",aff:true},{s:"We don't play tennis.",neg:"We play tennis.",aff:false}];let i=0,score=0;function q(){if(i>=items.length){addXP(score*3);reward('🔀','¡Completado!',score+'/'+items.length+' · +'+(score*3)+' XP');return;}const it=items[i];GA().innerHTML=`<div class="max-w-md mx-auto text-center"><p class="text-sm text-gray-500 mb-2">${i+1}/${items.length}</p><div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow"><p class="text-xl font-bold mb-4">"${it.s}"</p><p class="text-sm text-gray-500 mb-3">Transforma a: <b>${it.aff?'NEGATIVO':'AFIRMATIVO'}</b></p><div class="grid gap-2">${rnd([it.neg,it.s],2).map(o=>`<button onclick="window._an('${o.replace(/'/g,"\\'")}','${it.neg.replace(/'/g,"\\'")}',this)" class="py-3 px-3 rounded-xl border-2 border-cyan-200 dark:border-gray-600 font-semibold hover:bg-cyan-50 text-sm">${o}</button>`).join('')}</div></div></div>`;}window._an=(pick,ans,el)=>{const btns=GA().querySelectorAll('button');btns.forEach(b=>b.disabled=true);if(pick===ans){el.classList.add('!border-green-500','bg-green-100');score++;playSound('correct');}else{el.classList.add('!border-red-500','bg-red-100','shake');playSound('wrong');}setTimeout(()=>{i++;q();},900);};q();}
+
+// DO/DOES GAME
+function startQuestionGame(){const subs=[{s:"you",a:"Do"},{s:"she",a:"Does"},{s:"they",a:"Do"},{s:"he",a:"Does"},{s:"we",a:"Do"},{s:"it",a:"Does"},{s:"I",a:"Do"},{s:"the dog",a:"Does"}];let i=0,score=0;const shuffled=rnd(subs,8);function q(){if(i>=shuffled.length){addXP(score*3);reward('❓','¡Do/Does dominado!',score+'/'+shuffled.length+' · +'+(score*3)+' XP');return;}const it=shuffled[i];GA().innerHTML=`<div class="max-w-md mx-auto text-center"><p class="text-sm text-gray-500 mb-2">${i+1}/${shuffled.length}</p><div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow"><p class="text-2xl font-bold mb-1">___ ${it.s} like pizza?</p><p class="text-sm text-gray-400 mb-4">¿Do o Does?</p><div class="grid grid-cols-2 gap-3">${['Do','Does'].map(o=>`<button onclick="window._dq('${o}','${it.a}',this)" class="py-4 rounded-xl border-2 border-purple-200 dark:border-gray-600 font-bold text-lg hover:bg-purple-50 dark:hover:bg-purple-900/30">${o}</button>`).join('')}</div></div></div>`;}window._dq=(pick,ans,el)=>{const btns=GA().querySelectorAll('button');btns.forEach(b=>b.disabled=true);if(pick===ans){el.classList.add('!border-green-500','bg-green-100');score++;playSound('correct');}else{el.classList.add('!border-red-500','bg-red-100','shake');[...btns].find(b=>b.textContent===ans)?.classList.add('!border-green-500','bg-green-100');playSound('wrong');}setTimeout(()=>{i++;q();},900);};q();}
+
+// FILL BLANK
+function startFillBlank(){const sents=[{t:"She ___ (study) English.",a:"studies",o:["studies","study","studys"]},{t:"They ___ (play) soccer.",a:"play",o:["play","plays","playing"]},{t:"He ___ (not/like) coffee.",a:"doesn't like",o:["doesn't like","don't like","doesn't likes"]},{t:"___ you speak English?",a:"Do",o:["Do","Does","Are"]},{t:"She ___ (go) to school.",a:"goes",o:["goes","go","gos"]},{t:"We ___ (not/work) here.",a:"don't work",o:["don't work","doesn't work","don't works"]},{t:"___ she live here?",a:"Does",o:["Does","Do","Is"]},{t:"He ___ (watch) TV.",a:"watches",o:["watches","watchs","watch"]}];let i=0,score=0;function q(){if(i>=sents.length){addXP(score*3);reward('✍️','¡Frases completadas!',score+'/'+sents.length+' · +'+(score*3)+' XP');return;}const s=sents[i];GA().innerHTML=`<div class="max-w-md mx-auto text-center"><p class="text-sm text-gray-500 mb-2">${i+1}/${sents.length}</p><div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow"><p class="text-xl font-bold mb-5">${s.t}</p><div class="grid gap-2">${rnd(s.o,s.o.length).map(o=>`<button onclick="window._fb('${o}','${s.a}',this)" class="py-3 rounded-xl border-2 border-yellow-200 dark:border-gray-600 font-semibold hover:bg-yellow-50 dark:hover:bg-yellow-900/30">${o}</button>`).join('')}</div></div></div>`;}window._fb=(pick,ans,el)=>{const btns=GA().querySelectorAll('button');btns.forEach(b=>b.disabled=true);if(pick===ans){el.classList.add('!border-green-500','bg-green-100');score++;playSound('correct');}else{el.classList.add('!border-red-500','bg-red-100','shake');[...btns].find(b=>b.textContent===ans)?.classList.add('!border-green-500','bg-green-100');playSound('wrong');}setTimeout(()=>{i++;q();},900);};q();}
+
+// SPEED
+function startSpeed(){let score=0,time=30,timer;function q(){const opts=rnd(VERBS,4);const target=opts[0];const shuffled=rnd(opts,4);GA().querySelector('#spQ').innerHTML=`<p class="text-lg mb-1">¿Cómo se conjuga con <b>He</b>?</p><p class="text-3xl font-extrabold mb-3">${target.img} ${target.en}</p><div class="grid grid-cols-2 gap-2">${shuffled.map(o=>`<button onclick="window._sp('${o.third}','${target.third}')" class="py-3 rounded-xl bg-white dark:bg-gray-700 font-bold shadow hover:bg-red-50">${o.third}</button>`).join('')}</div>`;}GA().innerHTML=`<div class="max-w-md mx-auto text-center"><div class="flex justify-between mb-3"><span class="font-bold text-red-500">⏱️ <span id="spTime">30</span>s</span><span class="font-bold">Puntos: <span id="spScore">0</span></span></div><div id="spQ" class="bg-red-50 dark:bg-gray-800 rounded-2xl p-6"></div></div>`;window._sp=(pick,t)=>{if(pick===t){score++;playSound('correct');}else{playSound('wrong');time=Math.max(0,time-2);}document.getElementById('spScore').textContent=score;q();};timer=setInterval(()=>{time--;document.getElementById('spTime').textContent=time;if(time<=0){clearInterval(timer);addXP(score*2);reward('⚡','¡Tiempo!',score+' aciertos · +'+(score*2)+' XP');}},1000);q();}
+
+// MATCH
+function startMatch(){const picks=rnd(VERBS,5);let selected=null,done=0;GA().innerHTML=`<div class="max-w-lg mx-auto"><p class="text-center text-sm text-gray-500 mb-3">Une el verbo (I) con su forma para He/She/It</p><div class="grid grid-cols-2 gap-4"><div id="mcol1" class="space-y-2"></div><div id="mcol2" class="space-y-2"></div></div></div>`;const c1=document.getElementById('mcol1'),c2=document.getElementById('mcol2');picks.forEach(v=>{c1.innerHTML+=`<button data-en="${v.en}" onclick="window._msel(this,'a','${v.en}')" class="w-full py-3 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 font-bold">${v.en}</button>`;});rnd(picks,5).forEach(v=>{c2.innerHTML+=`<button data-en="${v.en}" onclick="window._msel(this,'b','${v.en}')" class="w-full py-3 rounded-xl bg-teal-100 dark:bg-teal-900/40 font-semibold">${v.third}</button>`;});window._msel=(el,side,en)=>{if(el.dataset.done)return;if(!selected){selected={el,side,en};el.classList.add('ring-2','ring-emerald-500');return;}if(selected.side===side){selected.el.classList.remove('ring-2','ring-emerald-500');selected={el,side,en};el.classList.add('ring-2','ring-emerald-500');return;}if(selected.en===en){[selected.el,el].forEach(b=>{b.dataset.done=1;b.classList.add('!bg-green-400','text-white','ring-0');b.classList.remove('ring-2','ring-emerald-500');});playSound('correct');addXP(4);done++;if(done===picks.length)setTimeout(()=>reward('🔗','¡Todo emparejado!','+'+(done*4)+' XP'),400);}else{playSound('wrong');selected.el.classList.add('shake');selected.el.classList.remove('ring-2','ring-emerald-500');}selected=null;};}
+
+// PRONUNCIATION
+function startPronunciation(){const verbs=rnd(VERBS,8);let i=0;function q(){if(i>=verbs.length){addXP(15);reward('🎤','¡Práctica completa!','+15 XP · ¡Gran pronunciación!');return;}const v=verbs[i];GA().innerHTML=`<div class="max-w-md mx-auto text-center"><p class="text-sm text-gray-500 mb-2">${i+1}/${verbs.length}</p><div class="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow"><span class="text-6xl">${v.img}</span><h3 class="text-3xl font-extrabold mt-3">${v.en}</h3><p class="text-emerald-500 font-bold">He/She → ${v.third}</p><button onclick="speak('${v.en}. She ${v.third}')" class="mt-4 bg-blue-500 text-white px-6 py-2 rounded-full font-bold">🔊 Escuchar</button><div id="recStatus" class="mt-4 text-sm text-gray-500">Presiona el micrófono y repite</div><button onclick="window._rec('${v.en}')" class="mt-3 w-16 h-16 rounded-full bg-indigo-500 text-white text-2xl mx-auto flex items-center justify-center hover:scale-110 transition">🎤</button><button onclick="window._pnext()" class="mt-4 text-emerald-600 font-semibold">Siguiente →</button></div></div>`;}window._pnext=()=>{i++;q();};window._rec=(word)=>{const st=document.getElementById('recStatus');const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){st.innerHTML="🎧 Tu navegador no soporta grabación. ¡Practica escuchando!";return;}const rec=new SR();rec.lang='en-US';st.innerHTML="🔴 Escuchando...";rec.onresult=(e)=>{const said=e.results[0][0].transcript.toLowerCase().trim();if(said.includes(word.toLowerCase())){st.innerHTML=`<span class="text-green-500 font-bold">✅ ¡Perfecto! "${said}"</span>`;playSound('correct');addXP(3);}else st.innerHTML=`<span class="text-orange-500">Escuché "${said}". ¡Intenta otra vez!</span>`;};rec.onerror=()=>{st.innerHTML="⚠️ No pude escuchar. Intenta de nuevo.";};rec.start();};q();}
+
+/* ============================================================
+   QUIZ HUB
+   ============================================================ */
+function renderQuizHub(){document.getElementById('quizArea').innerHTML=`<div class="grid md:grid-cols-2 gap-4">${LESSONS.map(l=>`<div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow card-hover cursor-pointer" onclick="openLesson(${l.id})"><div class="text-3xl">${l.icon}</div><h3 class="font-bold mt-2">Evaluación Lección ${l.id}</h3><p class="text-sm text-gray-500">${l.quiz.length} preguntas · ${S.lessonsDone.includes(l.id)?'✅ Aprobada':'Pendiente'}</p></div>`).join('')}<div class="bg-gradient-to-br from-emerald-500 to-teal-500 text-white rounded-2xl p-5 shadow card-hover cursor-pointer" onclick="startFinalExam()"><div class="text-3xl">🏅</div><h3 class="font-bold mt-2">Examen Final</h3><p class="text-sm opacity-90">Todo el Presente Simple</p></div></div>`;}
+function startFinalExam(){const allQ=LESSONS.flatMap(l=>l.quiz);const q=rnd(allQ,8);let i=0,correct=0;const a=document.getElementById('quizArea');function show(){if(i>=q.length){const pct=Math.round(correct/q.length*100);const passed=pct>=60;a.innerHTML=`<div class="bg-white dark:bg-gray-800 rounded-2xl p-8 text-center shadow"><div class="text-6xl mb-3">${passed?'🏆':'📚'}</div><h3 class="text-2xl font-extrabold">${correct}/${q.length} (${pct}%)</h3><p class="text-gray-500 mb-4">${passed?'¡Aprobaste el examen final!':'Repasa las lecciones y vuelve a intentarlo'}</p>${passed?`<button onclick="showCertificate()" class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold px-6 py-3 rounded-xl">📜 Ver mi certificado</button>`:''}<button onclick="renderQuizHub()" class="block mx-auto mt-3 text-emerald-600 font-semibold">Volver</button></div>`;if(passed){addXP(50);if(!S.badges.includes('exam')){S.badges.push('exam');}save();}return;}const it=q[i];a.innerHTML=`<div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow max-w-xl mx-auto"><div class="h-2 bg-gray-100 dark:bg-gray-700 rounded-full mb-4"><div class="h-full bg-emerald-500 rounded-full" style="width:${(i/q.length)*100}%"></div></div><p class="font-semibold mb-4">${i+1}. ${it.q}</p><div class="space-y-2">${it.opts.map((o,ix)=>`<button onclick="window._fe(${ix})" class="w-full text-left px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 hover:border-emerald-400">${o}</button>`).join('')}</div></div>`;window._fe=(ix)=>{const btns=a.querySelectorAll('button');btns.forEach(b=>b.disabled=true);if(ix===it.a){btns[ix].classList.add('!border-green-500','bg-green-100');correct++;playSound('correct');}else{btns[ix].classList.add('!border-red-500','bg-red-100','shake');btns[it.a].classList.add('!border-green-500','bg-green-100');playSound('wrong');}setTimeout(()=>{i++;show();},800);};}show();}
+function showCertificate(){document.getElementById('quizArea').innerHTML=`<div class="bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-gray-800 dark:to-gray-800 border-8 border-double border-yellow-400 rounded-2xl p-8 text-center max-w-2xl mx-auto"><div class="text-6xl mb-2">📜</div><h2 class="text-2xl font-extrabold text-orange-600">Certificado de Logro</h2><p class="text-gray-500 mt-2">Se otorga a</p><p class="text-3xl font-extrabold my-2">${S.name}</p><p class="text-gray-600 dark:text-gray-300">Por dominar el<br><b class="text-emerald-600 text-xl">Presente Simple en Inglés</b></p><div class="mt-4 flex justify-center gap-6 text-sm"><span>⭐ ${S.xp} XP</span><span>🔤 ${S.mastered.length} verbos</span><span>🔥 ${S.streak} días</span></div><p class="text-xs text-gray-400 mt-4">${new Date().toLocaleDateString('es')}</p><button onclick="renderQuizHub()" class="mt-4 text-emerald-600 font-semibold">← Volver</button></div>`;}
+
+/* ============================================================
+   ACHIEVEMENTS
+   ============================================================ */
+const BADGES=[
+  {id:'first',icon:'🌟',name:'Primer verbo',desc:'Domina tu primer verbo',check:()=>S.mastered.length>=1},
+  {id:'v10',icon:'📚',name:'Coleccionista',desc:'Domina 10 verbos',check:()=>S.mastered.length>=10},
+  {id:'v30',icon:'🎓',name:'Experto en verbos',desc:'Domina 30 verbos',check:()=>S.mastered.length>=30},
+  {id:'v60',icon:'👑',name:'Rey de los verbos',desc:'Domina 60 verbos',check:()=>S.mastered.length>=60},
+  {id:'l1',icon:'✅',name:'Estudiante',desc:'Completa una lección',check:()=>S.lessonsDone.length>=1},
+  {id:'lall',icon:'🏆',name:'Graduado',desc:'Completa todas las lecciones',check:()=>S.lessonsDone.length>=LESSONS.length},
+  {id:'s3',icon:'🔥',name:'Constante',desc:'Racha de 3 días',check:()=>S.streak>=3},
+  {id:'xp100',icon:'⭐',name:'Centenario',desc:'Alcanza 100 XP',check:()=>S.xp>=100},
+  {id:'exam',icon:'🏅',name:'Examinado',desc:'Aprueba el examen final',check:()=>S.badges.includes('exam')},
+];
+function checkBadges(){BADGES.forEach(b=>{if(b.check()&&!S.badges.includes(b.id)){S.badges.push(b.id);save();reward(b.icon,'¡Insignia desbloqueada!',b.name+': '+b.desc);}});}
+function renderAchievements(){document.getElementById('achievementsGrid').innerHTML=BADGES.map(b=>{const un=S.badges.includes(b.id)||b.check();return `<div class="bg-white dark:bg-gray-800 rounded-2xl p-5 text-center shadow ${un?'':'opacity-40 grayscale'}"><div class="text-5xl mb-2 ${un?'animate-bounce-slow':''}">${b.icon}</div><h3 class="font-bold">${b.name}</h3><p class="text-xs text-gray-500">${b.desc}</p><div class="mt-2 text-xs font-bold ${un?'text-green-500':'text-gray-400'}">${un?'✅ Desbloqueada':'🔒 Bloqueada'}</div></div>`;}).join('');document.getElementById('certArea').innerHTML=S.lessonsDone.length>=LESSONS.length?`<div class="text-center"><button onclick="showView('quiz');setTimeout(startFinalExam,300)" class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold px-6 py-3 rounded-xl">🏅 Obtener certificado final</button></div>`:'';}
+
+/* ============================================================
+   PROFILE
+   ============================================================ */
+const AVATARS=['🦉','🐱','🐶','🦊','🐼','🐸','🦁','🐧','🐵','🦄','🐯','🐨'];
+function renderProfile(){document.getElementById('avatarDisplay').textContent=S.avatar;document.getElementById('nameInput').value=S.name;const lvl=getLevel();document.getElementById('profileLevelBadge').textContent=`Nivel ${lvl+1} · ${LEVELS[lvl][1]} ${LEVELS[lvl][2]}`;document.getElementById('pXp').textContent=S.xp;document.getElementById('pVerbs').textContent=S.mastered.length;document.getElementById('pBadges').textContent=S.badges.length;document.getElementById('avatarPicker').innerHTML=AVATARS.map(a=>`<button onclick="setAvatar('${a}')" class="text-3xl w-14 h-14 rounded-full ${S.avatar===a?'bg-emerald-200 dark:bg-emerald-800 ring-2 ring-emerald-500':'bg-gray-100 dark:bg-gray-700'} hover:scale-110 transition">${a}</button>`).join('');}
+function setAvatar(a){S.avatar=a;save();renderProfile();}
+function saveName(){S.name=document.getElementById('nameInput').value||'Explorador';save();}
+function resetProgress(){if(confirm('¿Seguro que quieres reiniciar todo tu progreso?')){localStorage.removeItem('ps_state');location.reload();}}
+function startDailyChallenge(){showView('games');setTimeout(startConjGame,200);toast('⚡ ¡Reto diario iniciado!');}
+
+/* INIT */
+refreshUI();renderDashboard();
+setInterval(()=>{S.timeMin+=1;save();},60000);
+</script>
+</body>
+</html>
